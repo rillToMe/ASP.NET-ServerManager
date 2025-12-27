@@ -152,40 +152,6 @@ Application data is stored in:
 - Console output may lag with high-frequency logs
 - No support for non-dotnet projects yet
 
-## 📝 Changelog
-
-### v1.1.0 (Current)
-- ✨ Added Build project feature
-- ✨ Added Clean project feature
-- ✨ Added build state tracking
-- ✨ Improved button state management
-- ✨ Added horizontal scrollbar for responsive layout
-- 🐛 Fixed UI freeze during build/clean operations
-
-### v1.0.0
-- 🎉 Initial release
-- ✨ Run and stop ASP.NET servers
-- ✨ Multiple project management
-- ✨ Live console output
-- ✨ Auto URL detection
-- ✨ Process tracking and restoration
-- ✨ Material Design UI
-
-## 🛣️ Roadmap
-
-### v1.2.0 (Planned)
-- [ ] Keyboard shortcuts
-- [ ] Dark mode toggle
-- [ ] Export/import project configurations
-- [ ] Custom port configuration
-- [ ] Environment variables support
-
-### v1.3.0 (Planned)
-- [ ] Multiple server instances
-- [ ] Project templates
-- [ ] Quick actions (Rebuild, Restart)
-- [ ] Performance metrics
-
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
