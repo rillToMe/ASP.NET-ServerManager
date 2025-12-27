@@ -14,6 +14,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Left Panel - Server List -->
         <Grid Grid.Column="0" Background="#F5F5F5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -75,6 +76,7 @@
             </Button>
         </Grid>
 
+        <!-- Right Panel - Server Details & Controls -->
         <Grid Grid.Column="1" Margin="15">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -82,6 +84,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
+            <!-- Header with Settings Button -->
             <Grid Grid.Row="0" Margin="0,0,0,10">
                 <TextBlock Text="Project Details" FontSize="18" FontWeight="Bold" 
                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -92,6 +95,7 @@
                 </Button>
             </Grid>
 
+            <!-- Server Info & Controls -->
             <StackPanel Grid.Row="1" x:Name="DetailsPanel" Visibility="Collapsed">
 
                 <Grid Margin="0,0,0,15">
@@ -139,54 +143,80 @@
                     </Button>
                 </Grid>
 
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                    <Button x:Name="RunBtn" Padding="15,8" 
-                            FontSize="14" FontWeight="Bold" Click="RunBtn_Click"
-                            Style="{StaticResource MaterialDesignRaisedButton}"
-                            materialDesign:ButtonAssist.CornerRadius="4"
-                            Background="#4CAF50" Foreground="White" BorderThickness="0" 
-                            Margin="0,0,10,0" Cursor="Hand">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Play" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                            <TextBlock Text="Run Server" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    <Button x:Name="StopBtn" Padding="15,8" 
-                            FontSize="14" FontWeight="Bold" Click="StopBtn_Click"
-                            Style="{StaticResource MaterialDesignRaisedButton}"
-                            materialDesign:ButtonAssist.CornerRadius="4"
-                            Background="#F44336" Foreground="White" BorderThickness="0"
-                            IsEnabled="False" Cursor="Hand" Margin="0,0,10,0">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Stop" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                            <TextBlock Text="Stop Server" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    <Button x:Name="VisitWebBtn" Padding="15,8" 
-                            FontSize="14" FontWeight="Bold" Click="VisitWebBtn_Click"
-                            Style="{StaticResource MaterialDesignRaisedButton}"
-                            materialDesign:ButtonAssist.CornerRadius="4"
-                            Background="#2196F3" Foreground="White" BorderThickness="0"
-                            IsEnabled="False" Cursor="Hand" Margin="0,0,10,0">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Web" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                            <TextBlock Text="Visit Web" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    <Button x:Name="DeleteBtn" Padding="15,8" 
-                            FontSize="14" FontWeight="Bold" Click="DeleteBtn_Click"
-                            Style="{StaticResource MaterialDesignRaisedButton}"
-                            materialDesign:ButtonAssist.CornerRadius="4"
-                            Background="#9E9E9E" Foreground="White" BorderThickness="0"
-                            Cursor="Hand">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Delete" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                            <TextBlock Text="Delete Project" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"
+                              Margin="0,0,0,20">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <Button x:Name="BuildBtn" Padding="15,8" 
+                                FontSize="14" FontWeight="Bold" Click="BuildBtn_Click"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                materialDesign:ButtonAssist.CornerRadius="4"
+                                Background="#FF9800" Foreground="White" BorderThickness="0" 
+                                Margin="0,0,10,0" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Hammer" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="Build" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="CleanBtn" Padding="15,8" 
+                                FontSize="14" FontWeight="Bold" Click="CleanBtn_Click"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                materialDesign:ButtonAssist.CornerRadius="4"
+                                Background="#9C27B0" Foreground="White" BorderThickness="0" 
+                                Margin="0,0,10,0" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Broom" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="Clean" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="RunBtn" Padding="15,8" 
+                                FontSize="14" FontWeight="Bold" Click="RunBtn_Click"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                materialDesign:ButtonAssist.CornerRadius="4"
+                                Background="#4CAF50" Foreground="White" BorderThickness="0" 
+                                Margin="0,0,10,0" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Play" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="Run Server" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="StopBtn" Padding="15,8" 
+                                FontSize="14" FontWeight="Bold" Click="StopBtn_Click"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                materialDesign:ButtonAssist.CornerRadius="4"
+                                Background="#F44336" Foreground="White" BorderThickness="0"
+                                IsEnabled="False" Cursor="Hand" Margin="0,0,10,0">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Stop" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="Stop Server" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="VisitWebBtn" Padding="15,8" 
+                                FontSize="14" FontWeight="Bold" Click="VisitWebBtn_Click"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                materialDesign:ButtonAssist.CornerRadius="4"
+                                Background="#2196F3" Foreground="White" BorderThickness="0"
+                                IsEnabled="False" Cursor="Hand" Margin="0,0,10,0">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Web" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="Visit Web" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="DeleteBtn" Padding="15,8" 
+                                FontSize="14" FontWeight="Bold" Click="DeleteBtn_Click"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                materialDesign:ButtonAssist.CornerRadius="4"
+                                Background="#9E9E9E" Foreground="White" BorderThickness="0"
+                                Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Delete" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="Delete Project" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
             </StackPanel>
 
+            <!-- Empty State -->
             <StackPanel Grid.Row="1" x:Name="EmptyState" 
                         HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="No project selected" FontSize="16" 
@@ -196,6 +226,7 @@
                            HorizontalAlignment="Center"/>
             </StackPanel>
 
+            <!-- Logs -->
             <Border Grid.Row="2" BorderBrush="#DDDDDD" BorderThickness="1" 
                     Background="Black" Margin="0,10,0,0">
                 <Grid>

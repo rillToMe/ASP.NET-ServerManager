@@ -9,8 +9,13 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 
 		<ApplicationIcon>Assets\hotaru_icon.ico</ApplicationIcon>
+		<Product>Server Manager</Product>
+		<Company>DitDev</Company>
+		<Description>ASP.NET Server Manager</Description>
 
-		<Platforms>x64</Platforms>
+		<Version>1.1.0</Version>
+		<AssemblyVersion>1.1.0.0</AssemblyVersion>
+		<FileVersion>1.1.0.0</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

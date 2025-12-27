@@ -165,13 +165,26 @@ namespace ServerManager
                     Id = Guid.NewGuid().ToString(),
                     Name = folderName,
                     Path = folderPath,
-                    Status = "Stopped"
+                    Status = "Stopped",
+                    IsBuilt = CheckIfProjectIsBuilt(folderPath)
                 };
 
                 projects.Add(newProject);
                 SaveProjects();
                 ServerListBox.SelectedItem = newProject;
             }
+        }
+
+        private bool CheckIfProjectIsBuilt(string projectPath)
+        {
+            // Check if bin folder exists and has content
+            var binPath = System.IO.Path.Combine(projectPath, "bin");
+            if (Directory.Exists(binPath))
+            {
+                var files = Directory.GetFiles(binPath, "*.*", SearchOption.AllDirectories);
+                return files.Length > 0;
+            }
+            return false;
         }
 
         private void ServerListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -260,6 +273,172 @@ namespace ServerManager
             }
         }
 
+        private async void BuildBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedProject == null) return;
+
+            if (!Directory.Exists(selectedProject.Path))
+            {
+                MessageBox.Show("Project path does not exist!", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                BuildBtn.IsEnabled = false;
+                CleanBtn.IsEnabled = false;
+
+                AppendLog($"\n=== Building project: {selectedProject.Name} ===");
+                AppendLog($"Path: {selectedProject.Path}");
+                AppendLog("Running command: dotnet build\n");
+
+                var buildProcess = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "dotnet",
+                        Arguments = "build",
+                        WorkingDirectory = selectedProject.Path,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true
+                    }
+                };
+
+                buildProcess.OutputDataReceived += (s, args) =>
+                {
+                    if (!string.IsNullOrEmpty(args.Data))
+                    {
+                        Dispatcher.Invoke(() => AppendLog(args.Data));
+                    }
+                };
+
+                buildProcess.ErrorDataReceived += (s, args) =>
+                {
+                    if (!string.IsNullOrEmpty(args.Data))
+                    {
+                        Dispatcher.Invoke(() => AppendLog($"ERROR: {args.Data}"));
+                    }
+                };
+
+                buildProcess.Start();
+                buildProcess.BeginOutputReadLine();
+                buildProcess.BeginErrorReadLine();
+
+                await Task.Run(() => buildProcess.WaitForExit());
+
+                if (buildProcess.ExitCode == 0)
+                {
+                    AppendLog("\n✓ Build completed successfully!\n");
+                    selectedProject.IsBuilt = true;
+                    SaveProjects();
+                }
+                else
+                {
+                    AppendLog($"\n✗ Build failed with exit code {buildProcess.ExitCode}\n");
+                    selectedProject.IsBuilt = false;
+                    SaveProjects();
+                }
+
+                buildProcess.Dispose();
+                BuildBtn.IsEnabled = true;
+                CleanBtn.IsEnabled = true;
+                UpdateButtonStates();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error building project: {ex.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                AppendLog($"\nERROR: {ex.Message}");
+                BuildBtn.IsEnabled = true;
+                CleanBtn.IsEnabled = true;
+            }
+        }
+
+        private async void CleanBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedProject == null) return;
+
+            if (!Directory.Exists(selectedProject.Path))
+            {
+                MessageBox.Show("Project path does not exist!", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                BuildBtn.IsEnabled = false;
+                CleanBtn.IsEnabled = false;
+
+                AppendLog($"\n=== Cleaning project: {selectedProject.Name} ===");
+                AppendLog($"Path: {selectedProject.Path}");
+                AppendLog("Running command: dotnet clean\n");
+
+                var cleanProcess = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "dotnet",
+                        Arguments = "clean",
+                        WorkingDirectory = selectedProject.Path,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true
+                    }
+                };
+
+                cleanProcess.OutputDataReceived += (s, args) =>
+                {
+                    if (!string.IsNullOrEmpty(args.Data))
+                    {
+                        Dispatcher.Invoke(() => AppendLog(args.Data));
+                    }
+                };
+
+                cleanProcess.ErrorDataReceived += (s, args) =>
+                {
+                    if (!string.IsNullOrEmpty(args.Data))
+                    {
+                        Dispatcher.Invoke(() => AppendLog($"ERROR: {args.Data}"));
+                    }
+                };
+
+                cleanProcess.Start();
+                cleanProcess.BeginOutputReadLine();
+                cleanProcess.BeginErrorReadLine();
+
+                await Task.Run(() => cleanProcess.WaitForExit());
+
+                if (cleanProcess.ExitCode == 0)
+                {
+                    AppendLog("\n✓ Clean completed successfully!\n");
+                    selectedProject.IsBuilt = false;
+                    SaveProjects();
+                }
+                else
+                {
+                    AppendLog($"\n✗ Clean failed with exit code {cleanProcess.ExitCode}\n");
+                }
+
+                cleanProcess.Dispose();
+                BuildBtn.IsEnabled = true;
+                CleanBtn.IsEnabled = true;
+                UpdateButtonStates();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error cleaning project: {ex.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                AppendLog($"\nERROR: {ex.Message}");
+                BuildBtn.IsEnabled = true;
+                CleanBtn.IsEnabled = true;
+            }
+        }
+
         private void SettingsBtn_Click(object sender, RoutedEventArgs e)
         {
             var aboutWindow = new AboutWindow
@@ -272,6 +451,26 @@ namespace ServerManager
         private void RunBtn_Click(object sender, RoutedEventArgs e)
         {
             if (selectedProject == null) return;
+
+            if (!selectedProject.IsBuilt)
+            {
+                var result = MessageBox.Show(
+                    "Project hasn't been built yet. Build now?",
+                    "Build Required",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question
+                );
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    BuildBtn_Click(sender, e);
+                    return;
+                }
+                else
+                {
+                    return;
+                }
+            }
 
             if (!Directory.Exists(selectedProject.Path))
             {
@@ -435,7 +634,11 @@ namespace ServerManager
             if (selectedProject != null)
             {
                 bool isRunning = selectedProject.Status == "Running";
-                RunBtn.IsEnabled = !isRunning;
+                bool isBuilt = selectedProject.IsBuilt;
+
+                BuildBtn.IsEnabled = !isRunning;
+                CleanBtn.IsEnabled = !isRunning;
+                RunBtn.IsEnabled = !isRunning && isBuilt;
                 StopBtn.IsEnabled = isRunning;
                 VisitWebBtn.IsEnabled = isRunning && !string.IsNullOrEmpty(serverUrl);
             }
@@ -511,5 +714,6 @@ namespace ServerManager
         public string Status { get; set; } = "Stopped";
         public int? ProcessId { get; set; }
         public string? ServerUrl { get; set; }
+        public bool IsBuilt { get; set; } = false;
     }
 }
