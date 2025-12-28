@@ -4,7 +4,15 @@
 ![.NET](https://img.shields.io/badge/.NET-8.0-purple)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+<div align="center">
+![Atlas Logo](https://img.shields.io/badge/Atlas-Private%20Media%20Vault-007ACC?style=for-the-badge&logo=windows&logoColor=white)
+![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![WPF](https://img.shields.io/badge/WPF-Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+
 A lightweight Windows desktop application to manage and run multiple ASP.NET development servers with ease. Built with WPF and Material Design.
+
+</div>
 
 ![ASP.NET Server Manager Screenshot](screenshots/main-window.png)
 
